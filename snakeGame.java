@@ -55,7 +55,7 @@ class snakeGame extends JComponent implements KeyListener{
         g.fillRect(0, 0, WIDTH, WIDTH);
         snack.paintComponent(g, false);
         snake.draw(g);
-        drawGrid(g);
+        //drawGrid(g);
         drawScore(g);
     }
     private void drawGrid(Graphics g){
@@ -144,19 +144,6 @@ class snakeGame extends JComponent implements KeyListener{
     }
 
     private void saveHighscore(){
-        // create fle
-        try {
-            File file = new File(highscoreFile);
-            if (file.createNewFile()) { //true if file created; false if it already exists
-              System.out.println("File created: " + file.getName());
-            } else {
-              System.out.println("File already exists.");
-            }
-          } catch (IOException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
-          }
-
         // write to file
         try {
             FileWriter myWriter = new FileWriter(highscoreFile);
@@ -170,21 +157,41 @@ class snakeGame extends JComponent implements KeyListener{
     }
 
     private int readHighscore(){
-        int hs = -1;
+        int hs = 0;
+        boolean created = false;
+
+        // create file
         try {
             File file = new File(highscoreFile);
-            Scanner myReader = new Scanner(file);
-            while (myReader.hasNextLine()) {
-              String data = myReader.nextLine();
-              hs = Integer.parseInt(data);
+            if (file.createNewFile()) { //true if file created; false if it already exists
+                System.out.println("File created: " + file.getName());
+                created = true;
             }
-            myReader.close();
-          } 
-        catch (FileNotFoundException e) {
+            else {
+                System.out.println("File already exists.");
+            }
+        } 
+        catch (IOException e) {
             System.out.println("An error occurred.");
             e.printStackTrace();
-          }
+        }
 
+        if (!created){
+            // read from file
+            try {
+                File file = new File(highscoreFile);
+                Scanner myReader = new Scanner(file);
+                while (myReader.hasNextLine()) {
+                String data = myReader.nextLine();
+                hs = Integer.parseInt(data);
+                }
+                myReader.close();
+            } 
+            catch (FileNotFoundException e) {
+                System.out.println("An error occurred.");
+                e.printStackTrace();
+            }
+        }
         return hs;
     }
 
